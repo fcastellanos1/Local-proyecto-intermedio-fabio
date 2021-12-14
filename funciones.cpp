@@ -123,8 +123,11 @@ int aleatorio(int & semilla, int min, int max){
 }
 
 void test_aleatorio(int & semilla, int min, int max){
-  int i = 10000;
+  double N = 10000;
+  int i = 10000;  
   int numbers = max - min +1;
+  double esperado = 1/(numbers+0.0);
+  std::cout<<"Valor esperado: "<<esperado<<"\n";
   int data[numbers] = {0};
   while (i > 0){
     int n = aleatorio(semilla, min, max);
@@ -135,8 +138,8 @@ void test_aleatorio(int & semilla, int min, int max){
   }
   double media = 0.0;
   for(int jj = 0; jj < numbers; jj++){
-    double sum = data[jj];
-    media = (sum + 0.0)/(semilla + 0.0);
+    int sum = data[jj] + 0.0;
+    media = (sum + 0.0)/N;
     std::cout<<media<<"\n";
   }
 }
@@ -189,67 +192,52 @@ void step_2(Eigen::MatrixXi & matrix, Eigen::MatrixXi & posiciones, int & t, int
   int particula_i = aleatorio(seed, 0, nparticulas -1);
   int p_ii = posiciones(particula_i, 0);
   int p_jj = posiciones(particula_i, 1);
-  int movimiento = aleatorio(seed, 0, 4);
+  int movimiento = 0;
   //Casos especiales en los bordes:
   if( p_ii == 0 || p_ii == (size-1) || p_jj == 0 || p_jj == (size-1) ){
     /*Del 1 al 4 son casos en las esquinas, del 5 al 8 son el resto de los bordes,
       y el caso 0 son los no-bordes, que es el default, el cual no entra al if.
     */ 
     if(p_ii == 0 && p_jj == 0){ //1
-      if(movimiento == 1 || movimiento == 4){
-	movimiento = aleatorio(seed, 0, 2);
-	if(movimiento == 1){movimiento = 3;}
-      }
+      movimiento = aleatorio(seed, 0, 2);
+      if(movimiento == 1){movimiento = 3;}
     }
     
     if(p_ii == 0 && p_jj == (size -1)){ //2
-      if(movimiento == 1 || movimiento == 2){
-	movimiento = aleatorio(seed, 3, 5);
-	if(movimiento == 5){movimiento = 0;}
-      }
+      movimiento = aleatorio(seed, 3, 5);
+      if(movimiento == 5){movimiento = 0;}
     }
     
     if(p_ii == (size -1) && p_jj == 0){ //3
-      if(movimiento == 3 || movimiento == 4){
-	movimiento = aleatorio(seed, 0, 2);
-      }
+      movimiento = aleatorio(seed, 0, 2);
     }
     
     if(p_ii == (size -1) && p_jj == (size -1)){ //4
-      if(movimiento == 2 || movimiento == 3){
-	movimiento = aleatorio(seed, 0, 2);
-	if(movimiento == 2){movimiento = 4;}
-      }
+      movimiento = aleatorio(seed, 0, 2);
+      if(movimiento == 2){movimiento = 4;}
     }
     
     if(p_ii == 0 && p_jj != 0 && p_jj != (size -1)){ //5
-      if(movimiento == 1){
-	movimiento = aleatorio(seed, 2, 5);
-	if(movimiento == 5){movimiento = 0;}
-      }
+      movimiento = aleatorio(seed, 2, 5);
+      if(movimiento == 5){movimiento = 0;}
     }
     
     if(p_jj == (size -1) && p_ii != 0 && p_ii != (size -1)){ //6
-      if(movimiento == 2){
-	movimiento = aleatorio(seed, 0, 3);
-	if(movimiento == 2){movimiento = 4;}
-      }
+      movimiento = aleatorio(seed, 0, 3);
+      if(movimiento == 2){movimiento = 4;}
     }
     
     if(p_ii == (size -1) && p_jj != 0 && p_jj != (size -1)){ //7
-      if(movimiento == 3){
-	movimiento = aleatorio(seed, 0, 3);
-	if(movimiento == 3){movimiento = 4;}
-      }
+      movimiento = aleatorio(seed, 0, 3);
+      if(movimiento == 3){movimiento = 4;}
     }
     
     if(p_jj == 0 && p_ii != 0 && p_ii != (size -1)){ //8
-      if(movimiento == 4){
-	movimiento = aleatorio(seed, 0, 3);
-      }
+      movimiento = aleatorio(seed, 0, 3);
     }
     
   }
+  else {movimiento = aleatorio(seed, 0, 4);}
   //Acciones: 0 (quieto), 1(arriba), 2(derecha), 3(abajo), 4(izquierda)
   if(movimiento==1){
     matrix(p_ii, p_jj) -=1;
@@ -273,4 +261,3 @@ void step_2(Eigen::MatrixXi & matrix, Eigen::MatrixXi & posiciones, int & t, int
   }
   t += 1;
 }
-
