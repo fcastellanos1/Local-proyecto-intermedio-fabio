@@ -2,6 +2,7 @@
 
 int main(void)
 {
-  test_aleatorio(100000, 0, 3);
+  int semillita = 1;
+  test_aleatorio(semillita, 0, 9);
   return 0;
 }

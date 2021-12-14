@@ -172,17 +172,9 @@ double calcular_entropia_2(Eigen::MatrixXi matrix, int nparticulas){
 double calcular_entropia_3(Eigen::MatrixXi matrix, int nparticulas){
   int size = matrix.size();
   double sum = 0.0;
-  /*for(int ii = 0; ii< size; ii++){
-    for(int jj = 0; jj< size; jj++){
-    if(matrix(ii, jj) != 0){
-    double P_i = (matrix(jj, ii)+0.0)/(nparticulas+0.0);
-    sum += (P_i * std::log(P_i));
-    }
-    }
-    }*/
   for(int i = 0 ; i < size; i++){
     int valor =  *(matrix.data() + i);
-    if( *(matrix.data() + i) != 0 ){
+    if( valor != 0 ){
       double P_i = (valor+0.0) /(nparticulas+0.0);
       sum +=  (P_i * std::log(P_i));
     }
