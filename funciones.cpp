@@ -64,11 +64,11 @@ void step(Eigen::MatrixXi & matrix, Eigen::MatrixXi & posiciones, int & t, int &
     if(p_ii == (size -1) && p_jj == 0){ //3
       while (movimiento == 3 || movimiento == 4){movimiento = aleatorio(seed, 0, 4);}
     }
-
+    
     if(p_ii == (size -1) && p_jj == (size -1)){ //4
       while (movimiento == 2 || movimiento == 3){movimiento = aleatorio(seed, 0, 4);}
     }
-
+    
     if(p_ii == 0 && p_jj != 0 && p_jj != (size -1)){ //5
       while (movimiento == 1){movimiento = aleatorio(seed, 0, 4);}
     }
@@ -181,3 +181,96 @@ double calcular_entropia_3(Eigen::MatrixXi matrix, int nparticulas){
   }
   return -sum;
 }
+
+void step_2(Eigen::MatrixXi & matrix, Eigen::MatrixXi & posiciones, int & t, int & seed){
+  int size = matrix.rows();
+  int nparticulas = posiciones.rows();
+  //Función para numero aleatorio entre 0 y nparticulas-1 :
+  int particula_i = aleatorio(seed, 0, nparticulas -1);
+  int p_ii = posiciones(particula_i, 0);
+  int p_jj = posiciones(particula_i, 1);
+  int movimiento = aleatorio(seed, 0, 4);
+  //Casos especiales en los bordes:
+  if( p_ii == 0 || p_ii == (size-1) || p_jj == 0 || p_jj == (size-1) ){
+    /*Del 1 al 4 son casos en las esquinas, del 5 al 8 son el resto de los bordes,
+      y el caso 0 son los no-bordes, que es el default, el cual no entra al if.
+    */ 
+    if(p_ii == 0 && p_jj == 0){ //1
+      if(movimiento == 1 || movimiento == 4){
+	movimiento = aleatorio(seed, 0, 2);
+	if(movimiento == 1){movimiento = 3;}
+      }
+    }
+    
+    if(p_ii == 0 && p_jj == (size -1)){ //2
+      if(movimiento == 1 || movimiento == 2){
+	movimiento = aleatorio(seed, 3, 5);
+	if(movimiento == 5){movimiento = 0;}
+      }
+    }
+    
+    if(p_ii == (size -1) && p_jj == 0){ //3
+      if(movimiento == 3 || movimiento == 4){
+	movimiento = aleatorio(seed, 0, 2);
+      }
+    }
+    
+    if(p_ii == (size -1) && p_jj == (size -1)){ //4
+      if(movimiento == 2 || movimiento == 3){
+	movimiento = aleatorio(seed, 0, 2);
+	if(movimiento == 2){movimiento = 4;}
+      }
+    }
+    
+    if(p_ii == 0 && p_jj != 0 && p_jj != (size -1)){ //5
+      if(movimiento == 1){
+	movimiento = aleatorio(seed, 2, 5);
+	if(movimiento == 5){movimiento = 0;}
+      }
+    }
+    
+    if(p_jj == (size -1) && p_ii != 0 && p_ii != (size -1)){ //6
+      if(movimiento == 2){
+	movimiento = aleatorio(seed, 0, 3);
+	if(movimiento == 2){movimiento = 4;}
+      }
+    }
+    
+    if(p_ii == (size -1) && p_jj != 0 && p_jj != (size -1)){ //7
+      if(movimiento == 3){
+	movimiento = aleatorio(seed, 0, 3);
+	if(movimiento == 3){movimiento = 4;}
+      }
+    }
+    
+    if(p_jj == 0 && p_ii != 0 && p_ii != (size -1)){ //8
+      if(movimiento == 4){
+	movimiento = aleatorio(seed, 0, 3);
+      }
+    }
+    
+  }
+  //Acciones: 0 (quieto), 1(arriba), 2(derecha), 3(abajo), 4(izquierda)
+  if(movimiento==1){
+    matrix(p_ii, p_jj) -=1;
+    matrix(p_ii -1, p_jj) += 1;
+    posiciones(particula_i, 0) -= 1;
+  }
+  if(movimiento==2){
+    matrix(p_ii, p_jj) -=1;
+    matrix(p_ii, p_jj +1) += 1;
+    posiciones(particula_i, 1) += 1;
+  }
+  if(movimiento==3){
+    matrix(p_ii, p_jj) -=1;
+    matrix(p_ii +1, p_jj) += 1;
+    posiciones(particula_i, 0) += 1;
+  }
+  if(movimiento==4){
+    matrix(p_ii, p_jj) -=1;
+    matrix(p_ii, p_jj -1) += 1;
+    posiciones(particula_i, 1) -= 1;
+  }
+  t += 1;
+}
+
