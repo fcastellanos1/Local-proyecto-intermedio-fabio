@@ -23,5 +23,8 @@ report_gprof.txt: simulacion_taza.cpp funciones.cpp
 	./report.x
 	gprof ./report.x gmon.out > $@
 
+report: main.tex
+	pdflatex informe
+
 clean:
 	rm -rf *.x *.out *.x.* *~
