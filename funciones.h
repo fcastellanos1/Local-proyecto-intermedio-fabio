@@ -17,5 +17,7 @@ double calcular_entropia(Eigen::MatrixXi matrix, int nparticulas);
 double calcular_entropia_2(Eigen::MatrixXi matrix, int nparticulas);
 double calcular_entropia_3(Eigen::MatrixXi matrix, int nparticulas);
 void step_2(Eigen::MatrixXi & matrix, Eigen::MatrixXi & posiciones, int & t, int & seed);
+void tiempo_equilibrio(int & tiempo, Eigen::MatrixXi matrix, Eigen::MatrixXi posiciones, int & semilla, int max_paso, double precision, int delta_pasos, int rep_delta);
+void tiempo_equilibrio_2(int & tiempo, Eigen::MatrixXi matrix, Eigen::MatrixXi posiciones, int & semilla, int max_paso, double precision, int delta_pasos, int rep_delta);
 
 #endif

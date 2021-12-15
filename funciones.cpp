@@ -2,6 +2,7 @@
 
 Eigen::MatrixXi creacion_matrix(int size, int nparticulas){
   Eigen::MatrixXi matriz(size, size);
+  matriz = Eigen::MatrixXi::Constant(size, size, 0);
   if (size%2==0){
     matriz(size/2 -1, size/2 -1) = nparticulas/4;
     matriz(size/2 -1, size/2) = nparticulas/4;
@@ -260,4 +261,32 @@ void step_2(Eigen::MatrixXi & matrix, Eigen::MatrixXi & posiciones, int & t, int
     posiciones(particula_i, 1) -= 1;
   }
   t += 1;
+}
+
+void tiempo_equilibrio(int & tiempo, Eigen::MatrixXi matrix, Eigen::MatrixXi posiciones, int & semilla, int max_paso, double precision, int delta_pasos, int rep_delta){
+  int size = matrix.rows();
+  int N = posiciones.rows();
+  
+  int contador = 0;
+  double vieja_entropia = calcular_entropia_3(matrix, N);
+  double nueva_entropia = 0.0;
+  /*El número rep_delta controla cuántas veces queremos que se
+    repita delta_pasos para que esté "estabilizado" con una
+    precisión establecida.
+  */
+  
+  for(int ii=1; ii<= max_paso; ii++){
+    step_2(matrix, posiciones, tiempo, semilla);
+    if(tiempo%delta_pasos == 0){
+      nueva_entropia = calcular_entropia_3(matrix, N);
+      if(std::fabs(vieja_entropia - nueva_entropia) < precision){
+	contador++;
+	if(contador==rep_delta){
+	  tiempo -= (delta_pasos*rep_delta)/2;
+	  break;}
+      }
+      else{contador = 0;
+	vieja_entropia = nueva_entropia;}
+    }
+  }  
 }
